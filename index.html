@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>박소현 | Interactive Glass Dashboard Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                        display: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        cyber: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#10b981',
+                            600: '#059669',
+                            900: '#022c22',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: #030712;
+            color: #f3f4f6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        .cyber-grid {
+            background-image: linear-gradient(to right, rgba(16, 185, 129, 0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .glass-panel:hover {
+            border-color: rgba(16, 185, 129, 0.6);
+            box-shadow: 0 25px 60px -10px rgba(16, 185, 129, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        .interactive-glow {
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, rgba(59, 130, 246, 0.1) 50%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+            z-index: 1;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #030712;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #374151;
+        }
+    </style>
+</head>
+<body class="cyber-grid min-h-screen selection:bg-emerald-500 selection:text-black relative">
+
+    <!-- Interactive Mouse Follower Glow -->
+    <div id="mouseGlow" class="interactive-glow"></div>
+
+    <header class="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-emerald-500/20">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="#hero" class="text-sm font-bold tracking-tight flex items-center gap-3 group">
+                <span class="w-3.5 h-3.5 rounded-full bg-emerald-500 group-hover:scale-125 transition-transform shadow-lg shadow-emerald-500/50 animate-pulse"></span>
+                <span class="font-mono tracking-wider font-extrabold text-white text-base">SO-HYUN.PARK // OS</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
+                <a href="#about" class="hover:text-emerald-400 transition-colors">01. Profile</a>
+                <a href="#experience" class="hover:text-emerald-400 transition-colors">02. Experience</a>
+                <a href="#projects" class="hover:text-emerald-400 transition-colors">03. Projects</a>
+                <a href="#activities" class="hover:text-emerald-400 transition-colors">04. Media</a>
+                <a href="#skills" class="hover:text-emerald-400 transition-colors">05. Skills</a>
+                <a href="#contact" class="px-5 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/40 text-emerald-400 font-medium hover:bg-emerald-500 hover:text-black transition-all text-xs tracking-wider font-mono">CONNECT()</a>
+            </nav>
+            <button id="mobileMenuBtn" class="md:hidden text-lg text-slate-300 focus:outline-none p-2">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+        <div id="mobileMenu" class="hidden md:hidden bg-slate-950/95 backdrop-blur-md border-b border-emerald-500/20 px-6 py-6 flex flex-col gap-4">
+            <a href="#about" class="mobile-link text-slate-300 hover:text-emerald-400 font-medium py-1">01. Profile</a>
+            <a href="#experience" class="mobile-link text-slate-300 hover:text-emerald-400 font-medium py-1">02. Experience</a>
+            <a href="#projects" class="mobile-link text-slate-300 hover:text-emerald-400 font-medium py-1">03. Projects</a>
+            <a href="#activities" class="mobile-link text-slate-300 hover:text-emerald-400 font-medium py-1">04. Media</a>
+            <a href="#skills" class="mobile-link text-slate-300 hover:text-emerald-400 font-medium py-1">05. Skills</a>
+            <a href="#contact" class="mobile-link text-emerald-400 font-semibold py-1 font-mono">CONNECT()</a>
+        </div>
+    </header>
+
+    <section id="hero" class="relative min-h-screen flex items-center justify-center pt-28 pb-20 px-6 overflow-hidden">
+        <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+            <div class="lg:col-span-7 flex flex-col items-start space-y-6">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    STATUS: AVAILABLE FOR NEW OPPORTUNITIES
+                </div>
+                <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.18] text-white">
+                    데이터 감각과 <br>
+                    <span class="font-mono text-emerald-400 font-semibold underline decoration-emerald-500/40 underline-offset-8">크리에이티브 역량</span>의 <br>
+                    시너지 인터페이스
+                </h1>
+                <p class="text-base sm:text-lg text-slate-400 max-w-xl leading-relaxed">
+                    국가 인문 100년 전액 장학생. AI 크리에이티브 제작부터 글로벌 무역 마케팅, 데이터 분석까지 비즈니스 가치를 극대화하는 인재 박소현입니다.
+                </p>
+                <div class="flex flex-wrap gap-4 pt-2">
+                    <a href="#projects" class="px-7 py-3.5 rounded-xl bg-emerald-500 text-slate-950 font-bold hover:bg-emerald-400 transition-all flex items-center gap-2 text-sm shadow-lg shadow-emerald-500/20 font-mono">
+                        <span>EXPLORE_PROJECTS()</span>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </a>
+                    <a href="#contact" class="px-7 py-3.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 font-semibold hover:bg-slate-800 transition-all text-sm font-mono">
+                        GET_IN_TOUCH()
+                    </a>
+                </div>
+            </div>
+
+            <div class="lg:col-span-5 relative">
+                <!-- Interactive Mouse Tilt Card -->
+                <div id="tiltCard" class="glass-panel p-8 rounded-3xl flex flex-col justify-between space-y-6 relative transition-transform duration-100 ease-out">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-xs font-mono text-emerald-400 uppercase tracking-widest">SYSTEM PROFILE // 01</span>
+                            <h3 class="text-2xl font-bold text-white mt-1">박소현 (So-hyun Park)</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-xl font-bold border border-emerald-500/30">
+                            朴
+                        </div>
+                    </div>
+
+                    <div class="space-y-3.5 text-sm text-slate-300">
+                        <div class="flex items-center gap-3 p-3.5 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-emerald-500/40 transition-colors">
+                            <i class="fa-solid fa-graduation-cap text-emerald-400 w-5 text-center"></i>
+                            <span class="font-medium">가천대학교 경영학 & 미디어커뮤니케이션</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-3.5 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-emerald-500/40 transition-colors">
+                            <i class="fa-solid fa-award text-emerald-400 w-5 text-center"></i>
+                            <span class="font-medium">국가 인문 100년 장학생 (전액장학)</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-3.5 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-emerald-500/40 transition-colors">
+                            <i class="fa-solid fa-certificate text-emerald-400 w-5 text-center"></i>
+                            <span class="font-medium">ADsP (데이터분석 준전문가)</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400 font-mono">
+                        <span>DATA // CONTENT</span>
+                        <span class="text-emerald-400 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> v2.6.0 Stable
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-24 px-6 border-t border-slate-800/80 bg-slate-950/40 relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-16">
+                <span class="text-xs font-mono uppercase tracking-widest text-emerald-400">01. ABOUT_ME.exe</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">학업 성취 및 핵심 역량 요약</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="glass-panel p-8 rounded-3xl flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl mb-6 border border-emerald-500/30">
+                            <i class="fa-solid fa-medal"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-3">학업 성취</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            국가 인문 100년 장학생으로 선발되어 전액 장학금을 수혜하며 깊이 있는 학습 태도와 전문성을 다져나가고 있습니다.
+                        </p>
+                    </div>
+                    <div class="mt-8 pt-4 border-t border-slate-800 text-xs text-emerald-400 font-mono flex items-center gap-2">
+                        <i class="fa-solid fa-terminal"></i> 국가 전액 장학 수혜
+                    </div>
+                </div>
+
+                <div class="glass-panel p-8 rounded-3xl flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-xl mb-6 border border-blue-500/30">
+                            <i class="fa-solid fa-chess-knight"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-3">경영 & 미디어 융합</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            경영학의 전략적 인사이트와 미디어커뮤니케이션의 콘텐츠 기획력을 복수전공하여 시장 분석부터 크리에이티브 집행까지 아우릅니다.
+                        </p>
+                    </div>
+                    <div class="mt-8 pt-4 border-t border-slate-800 text-xs text-blue-400 font-mono flex items-center gap-2">
+                        <i class="fa-solid fa-terminal"></i> 복수전공 이수
+                    </div>
+                </div>
+
+                <div class="glass-panel p-8 rounded-3xl flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-xl mb-6 border border-purple-500/30">
+                            <i class="fa-solid fa-chart-pie"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-3">데이터 분석 & AI</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            ADsP 자격 취득 및 바이오헬스 데이터분석 과정을 수료했으며, 생성형 AI를 활용한 영상 및 웹 콘텐츠 제작 역량을 보유하고 있습니다.
+                        </p>
+                    </div>
+                    <div class="mt-8 pt-4 border-t border-slate-800 text-xs text-purple-400 font-mono flex items-center gap-2">
+                        <i class="fa-solid fa-terminal"></i> ADsP 자격 보유
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="experience" class="py-24 px-6 border-t border-slate-800/80 bg-slate-900/20">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-16">
+                <span class="text-xs font-mono uppercase tracking-widest text-emerald-400">02. WORK_EXPERIENCE.log</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">근무 경험</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="glass-panel p-8 rounded-3xl">
+                    <div class="flex justify-between items-start mb-6">
+                        <span class="px-3.5 py-1.5 rounded-full bg-slate-800 text-slate-300 text-xs font-mono font-bold border border-slate-700">3개월</span>
+                        <div class="w-11 h-11 rounded-2xl bg-slate-800 flex items-center justify-center text-slate-300">
+                            <i class="fa-solid fa-chalkboard"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-1">대형 국어학원</h3>
+                    <p class="text-emerald-400 text-xs font-mono mb-4">메인 데스크 조교</p>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        원활한 학원 행정 지원과 학생 관리, 일정 조율 및 커뮤니케이션 업무를 성공적으로 수행했습니다.
+                    </p>
+                </div>
+
+                <div class="glass-panel p-8 rounded-3xl">
+                    <div class="flex justify-between items-start mb-6">
+                        <span class="px-3.5 py-1.5 rounded-full bg-slate-800 text-slate-300 text-xs font-mono font-bold border border-slate-700">2개월</span>
+                        <div class="w-11 h-11 rounded-2xl bg-slate-800 flex items-center justify-center text-slate-300">
+                            <i class="fa-solid fa-book-open"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-1">관공서 도서관</h3>
+                    <p class="text-emerald-400 text-xs font-mono mb-4">어린이관 근무</p>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        공공 도서관 어린이관에서 도서 분류, 이용자 안내 및 프로그램 보조를 담당하며 공공 서비스 마인드를 길렀습니다.
+                    </p>
+                </div>
+
+                <div class="glass-panel p-8 rounded-3xl">
+                    <div class="flex justify-between items-start mb-6">
+                        <span class="px-3.5 py-1.5 rounded-full bg-slate-800 text-slate-300 text-xs font-mono font-bold border border-slate-700">2.5개월</span>
+                        <div class="w-11 h-11 rounded-2xl bg-slate-800 flex items-center justify-center text-slate-300">
+                            <i class="fa-solid fa-globe"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-1">의료기기 회사</h3>
+                    <p class="text-emerald-400 text-xs font-mono mb-4">해외영업 B2C 부서</p>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        시장 동향 파악 및 수출입 영업 지원 업무를 담당하며 글로벌 실무 역량을 체득했습니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="py-24 px-6 border-t border-slate-800/80 bg-slate-950/60">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div>
+                    <span class="text-xs font-mono uppercase tracking-widest text-emerald-400">03. PROJECTS & PERFORMANCE</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">주요 프로젝트 및 마케팅 성과</h2>
+                </div>
+                <!-- Interactive Filter Buttons -->
+                <div class="flex flex-wrap gap-2 font-mono" id="projectFilters">
+                    <button onclick="filterProjects('all')" class="px-4.5 py-2.5 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs transition-all filter-btn active-filter shadow-md shadow-emerald-500/20" data-filter="all">ALL()</button>
+                    <button onclick="filterProjects('marketing')" class="px-4.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 font-semibold text-xs transition-all filter-btn" data-filter="marketing">MARKETING()</button>
+                    <button onclick="filterProjects('finance')" class="px-4.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 font-semibold text-xs transition-all filter-btn" data-filter="finance">FINANCE()</button>
+                    <button onclick="filterProjects('ai')" class="px-4.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 font-semibold text-xs transition-all filter-btn" data-filter="ai">AI_CREATIVE()</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10" id="projectsGrid">
+                <!-- Project 1 -->
+                <div class="glass-panel p-8 rounded-3xl flex flex-col justify-between project-item" data-category="marketing">
+                    <div>
+                        <div class="flex items-center justify-between mb-5">
+                            <span class="px-3.5 py-1.5 rounded-full bg-rose-500/10 text-rose-400 text-xs font-mono font-bold border border-rose-500/30">롯데홈쇼핑 엘라이브</span>
+                            <div class="w-11 h-11 rounded-2xl bg-rose-500/10 text-rose-400 flex items-center justify-center border border-rose-500/30">
+                                <i class="fa-solid fa-video"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">라이브커머스 기획 및 실행</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                            상품 소싱부터 가격 협의, 마케팅 전략 수립, SNS 마케팅, 방송 진행, 데이터 분석 및 사후 개선까지 전 과정을 총괄 집행하였습니다.
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 pt-5 border-t border-slate-800 text-xs text-slate-300 font-mono">
+                        <span class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800">상품 소싱</span>
+                        <span class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800">가격 협의</span>
+                        <span class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800">SNS 마케팅</span>
+                        <span class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800">데이터 분석</span>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="glass-panel p-8 rounded-3xl flex flex-col justify-between project-item" data-category="marketing">
+                    <div>
+                        <div class="flex items-center justify-between mb-5">
+                            <span class="px-3.5 py-1.5 rounded-full bg-blue-500/10 text-blue-400 text-xs font-mono font-bold border border-blue-500/30">KOTRA AICE</span>
+                            <div class="w-11 h-11 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center border border-blue-500/30">
+                                <i class="fa-solid fa-bullhorn"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">미국 시장 Meta B2B 무역 광고 집행</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                            미국 시장을 타겟으로 한 B2B 무역 광고를 Meta 플랫폼에 직접 집행하고, 바이어 교신을 진행하여 실전 글로벌 마케팅 역량을 검증받았습니다.
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 pt-5 border-t border-slate-800 text-xs text-slate-300 font-mono">
+                        <span class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800">Meta Ads</span>
+                        <span class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800">B2B 무역</span>
+                        <span class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800">바이어 교신</span>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="glass-panel p-8 rounded-3xl flex flex-col justify-between project-item" data-category="finance">
+                    <div>
+                        <div class="flex items-center justify-between mb-5">
+                            <span class="px-3.5 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-mono font-bold border border-emerald-500/30">키움 모의주식투자대회</span>
+                            <div class="w-11 h-11 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
+                                <i class="fa-solid fa-chart-line"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">수익률 122.23% 달성 (총 수익 4,200만원)</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                            3천 4백만 원의 투자 자금으로 4천 2백만 원의 막대한 수익을 창출하며 122.23%의 투자 성과를 기록했습니다. (총 수익률 1억 기준 47.7%)
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 pt-5 border-t border-slate-800 text-xs text-slate-300 font-mono">
+                        <span class="px-3 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30">ROI 122.23%</span>
+                        <span class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800">금융 데이터 분석</span>
+                    </div>
+                </div>
+
+                <!-- Project 4 -->
+                <div class="glass-panel p-8 rounded-3xl flex flex-col justify-between project-item" data-category="finance">
+                    <div>
+                        <div class="flex items-center justify-between mb-5">
+                            <span class="px-3.5 py-1.5 rounded-full bg-amber-500/10 text-amber-400 text-xs font-mono font-bold border border-amber-500/30">인액터스 연합 창업 동아리</span>
+                            <div class="w-11 h-11 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/30">
+                                <i class="fa-solid fa-lightbulb"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">교내 및 경기남부연합 아이디어 대회 우승 & 국내 대회 영어 피칭</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                            교내 및 경기남부연합 아이디어 대회에서 '화이테리어'가 우승을 차지했고, 26개교 대상 국내 대회 영어 피칭을 수행했습니다. PR 디비전으로 동아리 SNS 카드 뉴스 제작 및 업로드를 담당했습니다.
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 pt-5 border-t border-slate-800 text-xs text-slate-300 font-mono">
+                        <span class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800">화이테리어 우승</span>
+                        <span class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800">영어 피칭</span>
+                        <span class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800">PR 카드뉴스</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Creative Section Card -->
+            <div class="glass-panel p-8 sm:p-12 rounded-3xl relative overflow-hidden project-item border-emerald-500/40" data-category="ai">
+                <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="px-4 py-1.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-mono font-bold border border-emerald-500/40">AI_CREATIVE & CONTENT_GENERATION</span>
+                </div>
+                <p class="text-slate-300 text-sm sm:text-base leading-relaxed mb-8 max-w-3xl">
+                    생성형 AI 모델을 적극 활용하여 기획부터 노래, 이미지, 영상 제작, 광고 리메이크 및 웹페이지 구현까지 전방위적인 AI 프로젝트를 완수했습니다.
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-800 backdrop-blur-md">
+                        <div class="text-emerald-400 font-bold mb-1.5 text-sm flex items-center gap-2 font-mono">
+                            <i class="fa-solid fa-music"></i> AI 뮤직비디오
+                        </div>
+                        <p class="text-xs text-slate-400 leading-relaxed">트레일러 기획안 디자인, 노래·이미지·영상 제작 총괄</p>
+                    </div>
+                    <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-800 backdrop-blur-md">
+                        <div class="text-blue-400 font-bold mb-1.5 text-sm flex items-center gap-2 font-mono">
+                            <i class="fa-solid fa-film"></i> AI 영화 트레일러
+                        </div>
+                        <p class="text-xs text-slate-400 leading-relaxed">오리지널 창작 영화 트레일러 제작</p>
+                    </div>
+                    <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-800 backdrop-blur-md">
+                        <div class="text-purple-400 font-bold mb-1.5 text-sm flex items-center gap-2 font-mono">
+                            <i class="fa-solid fa-rectangle-ad"></i> AI 광고 & 상세페이지
+                        </div>
+                        <p class="text-xs text-slate-400 leading-relaxed">브랜드 광고 리메이크 및 고품질 상세페이지 이미지 제작</p>
+                    </div>
+                    <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-800 backdrop-blur-md">
+                        <div class="text-teal-400 font-bold mb-1.5 text-sm flex items-center gap-2 font-mono">
+                            <i class="fa-solid fa-code"></i> AI 웹페이지 구현
+                        </div>
+                        <p class="text-xs text-slate-400 leading-relaxed">AI 기술을 연동한 인터랙티브 웹페이지 직접 구현</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="activities" class="py-24 px-6 border-t border-slate-800/80 bg-slate-900/20">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-16">
+                <span class="text-xs font-mono uppercase tracking-widest text-emerald-400">04. MEDIA & ACTIVITIES.dat</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">유튜브 숏츠 및 대외 활동</h2>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-12">
+                <div class="lg:col-span-6 glass-panel p-8 rounded-3xl">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center gap-3.5">
+                            <div class="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-400 flex items-center justify-center text-xl border border-rose-500/30">
+                                <i class="fa-brands fa-youtube"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-white">유튜브 숏츠 채널 운영</h3>
+                                <span class="text-xs text-rose-400 font-mono">데이터 기반 지속적 개선</span>
+                            </div>
+                        </div>
+                        <span class="px-4 py-2 bg-rose-500/20 text-rose-300 font-mono font-extrabold text-sm rounded-2xl border border-rose-500/30">12.6만 조회수</span>
+                    </div>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                        시청 지속 시간 및 이탈 구간 등 세부 데이터를 분석하여 콘텐츠를 개선한 결과, <span class="text-white font-bold">최대 조회수 12.6만 회</span>를 기록했습니다. (그 외 1.8만, 1.2만 등 조회수 보유)
+                    </p>
+                    <div class="grid grid-cols-2 gap-4 pt-6 border-t border-slate-800">
+                        <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+                            <div class="text-2xl font-extrabold text-white font-mono">10%</div>
+                            <div class="text-xs text-slate-400 mt-1 font-medium">조회수 대비 좋아요율</div>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+                            <div class="text-2xl font-extrabold text-emerald-400 font-mono">DATA-DRIVEN</div>
+                            <div class="text-xs text-slate-400 mt-1 font-medium">주기적 피드백 반영</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-6 space-y-4">
+                    <div class="glass-panel p-6 rounded-3xl flex items-start gap-4">
+                        <div class="w-11 h-11 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-base shrink-0 border border-amber-500/30">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-base font-bold text-white">교내 글쓰기 대회 개선안 소논문 은상 총장상</h4>
+                            <p class="text-xs text-slate-400 mt-1 font-medium">논리적 문제 정의와 실효성 있는 개선안 도출 능력 입증</p>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-6 rounded-3xl flex items-start gap-4">
+                        <div class="w-11 h-11 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-base shrink-0 border border-emerald-500/30">
+                            <i class="fa-solid fa-map"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-base font-bold text-white">교내 캠퍼스맵 장려상</h4>
+                            <p class="text-xs text-slate-400 mt-1 font-medium">공간 이해도 및 시각적 표현력을 갖춘 캠퍼스맵 기획</p>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-6 rounded-3xl flex items-start gap-4">
+                        <div class="w-11 h-11 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-base shrink-0 border border-blue-500/30">
+                            <i class="fa-solid fa-earth-americas"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-base font-bold text-white">전국 대학생 모의유엔 제3위원회 대표단</h4>
+                            <p class="text-xs text-slate-400 mt-1 font-medium">국제 이슈에 대한 깊은 이해와 유창한 토론 및 협상 역량</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="glass-panel p-8 rounded-3xl">
+                    <div class="text-emerald-400 text-sm font-bold mb-3 flex items-center gap-2 font-mono"><i class="fa-solid fa-terminal text-xs"></i> 바이오헬스 & 금융</div>
+                    <ul class="space-y-2.5 text-xs text-slate-300 leading-relaxed font-medium">
+                        <li>• GUIP 바이오헬스 데이터분석전문가과정 수료</li>
+                        <li>• 새내기 시간표 멘토링 2대6 진행</li>
+                    </ul>
+                </div>
+                <div class="glass-panel p-8 rounded-3xl">
+                    <div class="text-blue-400 text-sm font-bold mb-3 flex items-center gap-2 font-mono"><i class="fa-solid fa-terminal text-xs"></i> 통역 및 글로벌 봉사</div>
+                    <ul class="space-y-2.5 text-xs text-slate-300 leading-relaxed font-medium">
+                        <li>• 국제 태권도 대회 협회 사무실 전담 통역</li>
+                        <li>• 국제 태권도 대회 운영 지원</li>
+                    </ul>
+                </div>
+                <div class="glass-panel p-8 rounded-3xl">
+                    <div class="text-purple-400 text-sm font-bold mb-3 flex items-center gap-2 font-mono"><i class="fa-solid fa-terminal text-xs"></i> 문화 및 교육 봉사</div>
+                    <ul class="space-y-2.5 text-xs text-slate-300 leading-relaxed font-medium">
+                        <li>• 김홍도 미술관 전시 안내</li>
+                        <li>• 도서관 영화 상영 보조 / 어린이 숲체험 보조</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="py-24 px-6 border-t border-slate-800/80 bg-slate-950/40">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-16">
+                <span class="text-xs font-mono uppercase tracking-widest text-emerald-400">05. SKILLS & CREDENTIALS.sh</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">자격증, 어학 및 툴 역량</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="glass-panel p-8 rounded-3xl flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl mb-6 border border-emerald-500/30"><i class="fa-solid fa-certificate"></i></div>
+                        <h3 class="text-lg font-bold text-white mb-6">자격증</h3>
+                        <div class="bg-slate-900 p-4.5 rounded-2xl border border-slate-800 flex justify-between items-center">
+                            <div>
+                                <div class="font-bold text-white text-sm font-mono">ADsP</div>
+                                <div class="text-xs text-slate-400 mt-0.5 font-medium">데이터분석 준전문가</div>
+                            </div>
+                            <span class="px-3.5 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-mono font-bold border border-emerald-500/30">ACQUIRED</span>
+                        </div>
+                    </div>
+                    <div class="mt-8 pt-4 border-t border-slate-800 text-xs text-emerald-400 font-mono flex items-center gap-2">
+                        <i class="fa-solid fa-check-circle"></i> 데이터 분석 역량 인증
+                    </div>
+                </div>
+
+                <div class="glass-panel p-8 rounded-3xl">
+                    <div class="w-14 h-14 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-xl mb-6 border border-blue-500/30"><i class="fa-solid fa-language"></i></div>
+                    <h3 class="text-lg font-bold text-white mb-6">어학 성적</h3>
+                    <div class="space-y-4">
+                        <div class="bg-slate-900 p-4.5 rounded-2xl border border-slate-800 flex justify-between items-center">
+                            <div>
+                                <div class="font-bold text-white text-sm font-mono">TOEIC</div>
+                                <div class="text-xs text-slate-400 mt-0.5 font-medium">공인 영어 성적</div>
+                            </div>
+                            <span class="font-extrabold text-blue-400 text-sm px-3.5 py-1.5 bg-blue-500/10 rounded-xl font-mono">880 PTS</span>
+                        </div>
+                        <div class="bg-slate-900 p-4.5 rounded-2xl border border-slate-800 flex justify-between items-center">
+                            <div>
+                                <div class="font-bold text-white text-sm font-mono">TOEIC Speaking</div>
+                                <div class="text-xs text-slate-400 mt-0.5 font-medium">공인 회화 성적</div>
+                            </div>
+                            <span class="font-extrabold text-blue-400 text-sm px-3.5 py-1.5 bg-blue-500/10 rounded-xl font-mono">IH LEVEL</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-8 rounded-3xl">
+                    <div class="w-14 h-14 rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-xl mb-6 border border-purple-500/30"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+                    <h3 class="text-lg font-bold text-white mb-6">툴 역량</h3>
+                    <div class="space-y-4">
+                        <div class="bg-slate-900 p-4.5 rounded-2xl border border-slate-800 flex justify-between items-center">
+                            <div>
+                                <div class="font-bold text-white text-sm font-mono">After Effects</div>
+                                <div class="text-xs text-slate-400 mt-0.5 font-medium">모션 그래픽 및 시각 효과</div>
+                            </div>
+                            <i class="fa-solid fa-check text-purple-400 text-sm bg-purple-500/10 p-2.5 rounded-xl border border-purple-500/30"></i>
+                        </div>
+                        <div class="bg-slate-900 p-4.5 rounded-2xl border border-slate-800 flex justify-between items-center">
+                            <div>
+                                <div class="font-bold text-white text-sm font-mono">Premiere Pro</div>
+                                <div class="text-xs text-slate-400 mt-0.5 font-medium">영상 편집 및 후반 작업</div>
+                            </div>
+                            <i class="fa-solid fa-check text-purple-400 text-sm bg-purple-500/10 p-2.5 rounded-xl border border-purple-500/30"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-24 px-6 border-t border-slate-800/80 bg-slate-950">
+        <div class="max-w-3xl mx-auto text-center glass-panel p-10 sm:p-14 rounded-3xl relative overflow-hidden shadow-2xl">
+            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-500 via-blue-500 to-purple-500"></div>
+            <span class="text-xs font-mono uppercase tracking-widest text-emerald-400">INITIALIZE_CONTACT</span>
+            <h2 class="text-3xl font-extrabold text-white mt-2 mb-4">함께 시너지를 낼 기회를 기다립니다</h2>
+            <p class="text-slate-400 max-w-lg mx-auto mb-8 text-sm leading-relaxed">
+                데이터 기반의 전략적 사고와 크리에이티브한 실행력을 바탕으로 귀사에 기여하겠습니다. 언제든지 편하게 연락주세요!
+            </p>
+
+            <div class="flex justify-center">
+                <button onclick="copyEmail()" class="px-8 py-4 rounded-2xl bg-emerald-500 text-slate-950 font-bold hover:bg-emerald-400 transition-all flex items-center gap-3 text-sm shadow-lg shadow-emerald-500/20 cursor-pointer font-mono group">
+                    <i class="fa-solid fa-envelope text-slate-950 group-hover:scale-110 transition-transform"></i>
+                    <span id="copyBtnText">cladir92@gmail.com 주소 복사</span>
+                </button>
+            </div>
+        </div>
+
+        <footer class="max-w-7xl mx-auto mt-20 pt-8 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 font-mono">
+            <div>© 2026 Park So-hyun. Interactive Cyber Dashboard OS.</div>
+            <div class="mt-4 sm:mt-0">
+                <a href="#hero" class="hover:text-emerald-400 transition-colors">BACK_TO_TOP ↑</a>
+            </div>
+        </footer>
+    </section>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Mouse Follower Glow & 3D Tilt Effect
+        const mouseGlow = document.getElementById('mouseGlow');
+        const tiltCard = document.getElementById('tiltCard');
+
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX;
+            const y = e.clientY;
+
+            // Update Glow Position
+            mouseGlow.style.left = `${x}px`;
+            mouseGlow.style.top = `${y}px`;
+
+            // Tilt Effect for Hero Profile Card
+            if (tiltCard) {
+                const rect = tiltCard.getBoundingClientRect();
+                const cardX = rect.left + rect.width / 2;
+                const cardY = rect.top + rect.height / 2;
+                
+                const angleX = (y - cardY) / 25;
+                const angleY = (cardX - x) / 25;
+
+                tiltCard.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg)`;
+            }
+        });
+
+        if (tiltCard) {
+            tiltCard.addEventListener('mouseleave', () => {
+                tiltCard.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+            });
+        }
+
+        // Copy Email Function with Clipboard Fallback
+        function copyEmail() {
+            const email = "cladir92@gmail.com";
+            const textarea = document.createElement("textarea");
+            textarea.value = email;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                const btnText = document.getElementById('copyBtnText');
+                btnText.innerText = "이메일 복사 완료!";
+                setTimeout(() => {
+                    btnText.innerText = "cladir92@gmail.com 주소 복사";
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+            }
+            document.body.removeChild(textarea);
+        }
+
+        // Project Filter Interactive Logic
+        function filterProjects(category) {
+            const items = document.querySelectorAll('.project-item');
+            const buttons = document.querySelectorAll('.filter-btn');
+
+            buttons.forEach(btn => {
+                if(btn.dataset.filter === category) {
+                    btn.classList.remove('bg-slate-900', 'border-slate-800', 'text-slate-300');
+                    btn.classList.add('bg-emerald-500', 'text-slate-950', 'font-bold', 'shadow-md', 'shadow-emerald-500/20');
+                } else {
+                    btn.classList.remove('bg-emerald-500', 'text-slate-950', 'font-bold', 'shadow-md', 'shadow-emerald-500/20');
+                    btn.classList.add('bg-slate-900', 'border', 'border-slate-800', 'text-slate-300');
+                }
+            });
+
+            items.forEach(item => {
+                if(category === 'all' || item.dataset.category === category) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
